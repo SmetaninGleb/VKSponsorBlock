@@ -1,21 +1,21 @@
-package ru.vksponsorblock.VKSponsorBlock.services.Impl;
+package ru.vksponsorblock.VKSponsorBlock.services.user.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.vksponsorblock.VKSponsorBlock.dto.user.UserIdDto;
+import ru.vksponsorblock.VKSponsorBlock.dto.user.UserUsernameDto;
 import ru.vksponsorblock.VKSponsorBlock.models.EntityStatus;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 import ru.vksponsorblock.VKSponsorBlock.models.Role;
 import ru.vksponsorblock.VKSponsorBlock.repositories.UserRepository;
 import ru.vksponsorblock.VKSponsorBlock.repositories.RoleRepository;
-import ru.vksponsorblock.VKSponsorBlock.services.UserService;
-import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.UserNotFoundException;
+import ru.vksponsorblock.VKSponsorBlock.services.user.UserService;
+import ru.vksponsorblock.VKSponsorBlock.services.user.UserValidateService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,13 +23,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserValidateService userValidateService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           UserValidateService userValidateService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userValidateService = userValidateService;
     }
 
     @Override
@@ -51,40 +55,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public UserUsernameDto getUsernameById(UserIdDto userIdDto) {
+        User user = userValidateService.validateUserById(userIdDto.getUserId());
+        UserUsernameDto usernameDto = new UserUsernameDto();
+        usernameDto.setUsername(user.getUsername());
+        return usernameDto;
     }
 
     @Override
-    public User getById(UUID id) {
-        return userRepository
-                .findById(id)
-                .orElseThrow(() -> {
-                    log.error("User with id {} not found!", id);
-                    return new UserNotFoundException("User with id " + id + " not found!");
-                });
+    public UserIdDto getUserIdByUsername(UserUsernameDto usernameDto) {
+        User user = userValidateService.validateUserByUsername(usernameDto.getUsername());
+        UserIdDto idDto = new UserIdDto();
+        idDto.setUserId(user.getId());
+        return idDto;
     }
 
-    @Override
-    public User getByUsername(String username) {
-        return userRepository
-                .findUserByUsername(username)
-                .orElseThrow(() ->
-                {
-                    log.error("User with username {} not found!", username);
-                    return new UserNotFoundException("User with username " + username + " not found!");
-                });
-    }
-
-    @Override
-    public void deleteById(UUID id) {
-        User user = userRepository
-                .findById(id)
-                .orElseThrow(() ->
-                {
-                    log.error("User with id {} not found!", id);
-                    return new UserNotFoundException("User with id " + id + " not found!");
-                });
-        log.info("User with id {} has been deleted!", id);
-    }
 }

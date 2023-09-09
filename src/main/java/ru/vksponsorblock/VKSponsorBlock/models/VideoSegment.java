@@ -16,7 +16,7 @@ public class VideoSegment extends BaseEntity {
 
     @Column(name = "video_id")
     @NotNull
-    private String video_id;
+    private String videoId;
 
     @Column(name = "segment_type")
     @Enumerated(value = EnumType.STRING)

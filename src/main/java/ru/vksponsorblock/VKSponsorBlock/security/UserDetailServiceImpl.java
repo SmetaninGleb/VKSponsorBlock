@@ -26,7 +26,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .findUserByUsername(username)
                 .orElseThrow(() -> {
                     log.error("User with username {} not found!", username);
-                    return new UserNotFoundException("User with username " +  username + " not found!");
+                    UserNotFoundException exception = new UserNotFoundException();
+                    exception.setUsername(username);
+                    return exception;
                 });
         return new UserDetailsImpl(user);
     }
