@@ -8,3 +8,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  subject: User Details
+  secret: JWT_SECRET
+  issuer: vksponsorblock
+  user-id-claim: userId
+  username-claim: username

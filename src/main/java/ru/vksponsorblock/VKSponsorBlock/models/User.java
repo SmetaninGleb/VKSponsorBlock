@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.vksponsorblock.VKSponsorBlock.utils.RoleType;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Column(name = "username")
@@ -21,11 +22,9 @@ public class User extends BaseEntity {
     @NotNull
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
-    joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-    inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
+    @Column(name = "role")
+    @Enumerated(value = EnumType.STRING)
+    private RoleType role;
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<VideoSegment> createdSegments;

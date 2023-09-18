@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -16,15 +19,16 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue
+    @UuidGenerator
     @Column(name = "id")
     @NotNull
     private UUID id;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "created")
     private Date created;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(name = "updated")
     private Date updated;
 

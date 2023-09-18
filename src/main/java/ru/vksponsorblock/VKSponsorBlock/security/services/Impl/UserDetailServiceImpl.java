@@ -1,4 +1,4 @@
-package ru.vksponsorblock.VKSponsorBlock.security;
+package ru.vksponsorblock.VKSponsorBlock.security.services.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 import ru.vksponsorblock.VKSponsorBlock.repositories.UserRepository;
+import ru.vksponsorblock.VKSponsorBlock.security.UserDetailsImpl;
 import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.UserNotFoundException;
 
 @Slf4j
@@ -26,9 +27,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .findUserByUsername(username)
                 .orElseThrow(() -> {
                     log.error("User with username {} not found!", username);
-                    UserNotFoundException exception = new UserNotFoundException();
-                    exception.setUsername(username);
-                    return exception;
+                    return new UserNotFoundException(username);
                 });
         return new UserDetailsImpl(user);
     }

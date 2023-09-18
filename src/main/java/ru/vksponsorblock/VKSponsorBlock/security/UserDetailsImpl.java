@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -18,10 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        return Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRoleName()));
     }
 
     @Override

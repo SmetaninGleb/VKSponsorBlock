@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserIdDto;
+import ru.vksponsorblock.VKSponsorBlock.dto.user.UserInfoDto;
 import ru.vksponsorblock.VKSponsorBlock.services.user.UserService;
 
 @RestController
@@ -20,7 +21,7 @@ public class UserRestController {
     }
 
     @GetMapping("/userInfo")
-    public void userInfo(@RequestParam @Valid UserIdDto userIdDto) {
-
+    public UserInfoDto userInfo(@RequestParam @Valid UserIdDto userIdDto) {
+        return userService.getUserInfoById(userIdDto);
     }
 }

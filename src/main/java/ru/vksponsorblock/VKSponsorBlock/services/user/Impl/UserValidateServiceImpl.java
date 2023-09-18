@@ -23,24 +23,12 @@ public class UserValidateServiceImpl implements UserValidateService {
     @Override
     public User validateUserByUsername(String username) {
         Optional<User> optUser = userRepository.findUserByUsername(username);
-        return optUser.orElseThrow(() -> getExceptionByUsername(username));
+        return optUser.orElseThrow(() -> new UserNotFoundException(username));
     }
 
     @Override
     public User validateUserById(UUID userId) {
         Optional<User> optUser = userRepository.findById(userId);
-        return optUser.orElseThrow(() -> getExceptionById(userId));
-    }
-
-    private UserNotFoundException getExceptionById(UUID userId) {
-        UserNotFoundException exception = new UserNotFoundException();
-        exception.setUserId(userId);
-        return exception;
-    }
-
-    private UserNotFoundException getExceptionByUsername(String username) {
-        UserNotFoundException exception = new UserNotFoundException();
-        exception.setUsername(username);
-        return exception;
+        return optUser.orElseThrow(() -> new UserNotFoundException(userId));
     }
 }
