@@ -22,12 +22,6 @@ public class VideoSegmentValidateServiceImpl implements VideoSegmentValidateServ
     @Override
     public VideoSegment validateSegmentById(UUID segmentId) {
         Optional<VideoSegment> optSegment = segmentRepository.findById(segmentId);
-        return optSegment.orElseThrow(() -> getNotFoundExceptionById(segmentId));
-    }
-
-    private VideoSegmentNotFoundException getNotFoundExceptionById(UUID segmentId) {
-        VideoSegmentNotFoundException exception = new VideoSegmentNotFoundException();
-        exception.setVideoSegmentId(segmentId);
-        return exception;
+        return optSegment.orElseThrow(() -> new VideoSegmentNotFoundException(segmentId));
     }
 }

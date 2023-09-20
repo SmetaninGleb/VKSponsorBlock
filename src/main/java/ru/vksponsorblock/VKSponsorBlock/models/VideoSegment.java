@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "video_segment")
+@Table(name = "video_segments")
 public class VideoSegment extends BaseEntity {
 
     @Column(name = "video_id")
@@ -51,4 +51,10 @@ public class VideoSegment extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private List<User> dislikedUsers;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "skipped_segments",
+        joinColumns = {@JoinColumn(name = "video_segment_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    private List<User> skippedUsers;
 }

@@ -10,4 +10,6 @@ public class UserInfoDto {
     private String username;
     private Integer segmentNumber;
     private Float allSegmentsTime;
+    private Float skippedTime;
+    private Float savedTime;
 }

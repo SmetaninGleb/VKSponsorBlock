@@ -34,4 +34,7 @@ public class User extends BaseEntity {
 
     @ManyToMany(mappedBy = "dislikedUsers", fetch = FetchType.LAZY)
     private List<VideoSegment> dislikedSegments;
+
+    @ManyToMany(mappedBy = "skippedUsers", fetch = FetchType.LAZY)
+    private List<VideoSegment> skippedSegments;
 }

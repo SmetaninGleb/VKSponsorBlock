@@ -2,19 +2,28 @@ package ru.vksponsorblock.VKSponsorBlock.services.user.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserCredentialsDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserIdDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserInfoDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserUsernameDto;
+import ru.vksponsorblock.VKSponsorBlock.dto.videoSegment.VideoSegmentIdDto;
 import ru.vksponsorblock.VKSponsorBlock.models.EntityStatus;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
+import ru.vksponsorblock.VKSponsorBlock.models.VideoSegment;
 import ru.vksponsorblock.VKSponsorBlock.repositories.UserRepository;
 import ru.vksponsorblock.VKSponsorBlock.repositories.VideoSegmentRepository;
 import ru.vksponsorblock.VKSponsorBlock.services.user.UserService;
 import ru.vksponsorblock.VKSponsorBlock.services.user.UserValidateService;
 import ru.vksponsorblock.VKSponsorBlock.utils.RoleType;
+import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.UserNotFoundException;
+import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.VideoSegmentNotFoundException;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -76,7 +85,22 @@ public class UserServiceImpl implements UserService {
         infoDto.setUsername(user.getUsername());
         infoDto.setSegmentNumber(user.getCreatedSegments().size());
         infoDto.setAllSegmentsTime(countAllSegmentsTime(user));
+        infoDto.setSkippedTime(countAllSkippedTime(user));
+        infoDto.setSavedTime(countAllSavedTime(user));
         return infoDto;
+    }
+
+    @Override
+    public void addSkippedVideoSegment(VideoSegmentIdDto videoSegmentIdDto) {
+        UUID segmentId = videoSegmentIdDto.getVideoSegmentId();
+        UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = details.getUsername();
+        Optional<User> optUser = userRepository.findUserByUsername(username);
+        User user = optUser.orElseThrow(() -> new UserNotFoundException(username));
+        Optional<VideoSegment> optSegment = segmentRepository.findVideoSegmentById(segmentId);
+        VideoSegment segment = optSegment.orElseThrow(() -> new VideoSegmentNotFoundException(segmentId));
+        user.getSkippedSegments().add(segment);
+        userRepository.save(user);
     }
 
     private Float countAllSegmentsTime(User user) {
@@ -88,4 +112,23 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Cannot count all segments time!"));
     }
 
+    private Float countAllSkippedTime(User user) {
+        return user.getSkippedSegments()
+                .stream()
+                .map(segment -> segment.getEndTimeSeconds() - segment.getStartTimeSeconds())
+                .reduce(Float::sum)
+                .orElseThrow(() -> new RuntimeException("Cannot count all skipped time!"));
+    }
+
+    private Float countAllSavedTime(User user) {
+        return user.getSkippedSegments()
+                .stream()
+                .map(segment -> {
+                    Float time = segment.getEndTimeSeconds() - segment.getStartTimeSeconds();
+                    time *= segment.getSkippedUsers().size();
+                    return time;
+                })
+                .reduce(Float::sum)
+                .orElseThrow(() -> new RuntimeException("Cannot count all saved time!"));
+    }
 }
