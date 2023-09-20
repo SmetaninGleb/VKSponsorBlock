@@ -26,7 +26,7 @@ public class VideoSegmentRestController {
     }
 
     @GetMapping("/skipSegments")
-    public List<VideoSegmentResponseDto> getSkipSegments(@RequestParam @Valid VideoIdDto requestDto) {
+    public List<VideoSegmentResponseDto> getSkipSegments(@Valid VideoIdDto requestDto) {
         return videoSegmentService.getSegments(requestDto);
     }
 
@@ -42,8 +42,11 @@ public class VideoSegmentRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ExceptionHandler(VideoSegmentNotFoundException.class)
-    private ResponseEntity<RestErrorResponseDto> segmentNotFoundHandler(VideoSegmentNotFoundException exception) {
-        return new ResponseEntity<>(new RestErrorResponseDto(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private ResponseEntity<RestErrorResponseDto> handler(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new RestErrorResponseDto(ex.getMessage()));
     }
 }

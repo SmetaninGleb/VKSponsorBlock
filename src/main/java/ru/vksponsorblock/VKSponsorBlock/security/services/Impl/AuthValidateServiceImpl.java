@@ -5,7 +5,7 @@ import ru.vksponsorblock.VKSponsorBlock.dto.user.UserCredentialsDto;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 import ru.vksponsorblock.VKSponsorBlock.repositories.UserRepository;
 import ru.vksponsorblock.VKSponsorBlock.security.services.AuthValidateService;
-import ru.vksponsorblock.VKSponsorBlock.security.utils.exceptions.UserAlreadyExistsException;
+import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.UserAlreadyExistsException;
 import ru.vksponsorblock.VKSponsorBlock.utils.exceptions.UserNotFoundException;
 
 import java.util.Optional;

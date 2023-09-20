@@ -1,4 +1,4 @@
-package ru.vksponsorblock.VKSponsorBlock.security.utils.exceptions;
+package ru.vksponsorblock.VKSponsorBlock.utils.exceptions;
 
 public class UserAlreadyExistsException extends RuntimeException {
     private final String username;
@@ -9,6 +9,6 @@ public class UserAlreadyExistsException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "User with username " + username + " already exists";
+        return "User with username '" + username + "' already exists";
     }
 }

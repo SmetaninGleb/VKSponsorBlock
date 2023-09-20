@@ -11,7 +11,7 @@ public class VideoSegmentNotFoundException extends RuntimeException {
 
     public VideoSegmentNotFoundException(UUID videoSegmentId) {
         this.videoSegmentId = videoSegmentId;
-        this.message = "User with id " + videoSegmentId + " not found!";
+        this.message = "User with id '" + videoSegmentId + "' not found!";
     }
     @Override
     public String getMessage() {

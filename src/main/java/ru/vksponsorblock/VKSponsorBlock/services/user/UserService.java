@@ -12,5 +12,6 @@ public interface UserService {
     UserUsernameDto getUsernameById(UserIdDto userIdDto);
     UserIdDto getUserIdByUsername(UserUsernameDto usernameDto);
     UserInfoDto getUserInfoById(UserIdDto userIdDto);
+    UserInfoDto getUserInfoByUsername(UserUsernameDto usernameDto);
     void addSkippedVideoSegment(VideoSegmentIdDto videoSegmentIdDto);
 }

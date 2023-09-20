@@ -32,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userService.register(userCredentialsDto);
         String token = jwtUtil.generateToken(user);
         JwtDto dto = new JwtDto();
+        dto.setUserId(user.getId());
         dto.setJwtToken(token);
         return dto;
     }
@@ -41,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
         User user = authValidateService.validateAuth(userCredentialsDto);
         String token = jwtUtil.generateToken(user);
         JwtDto dto = new JwtDto();
+        dto.setUserId(user.getId());
         dto.setJwtToken(token);
         return dto;
     }

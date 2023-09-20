@@ -91,6 +91,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInfoDto getUserInfoByUsername(UserUsernameDto usernameDto) {
+        User user = userValidateService.validateUserByUsername(usernameDto.getUsername());
+        UserIdDto userIdDto = new UserIdDto();
+        userIdDto.setUserId(user.getId());
+        return getUserInfoById(userIdDto);
+    }
+
+    @Override
     public void addSkippedVideoSegment(VideoSegmentIdDto videoSegmentIdDto) {
         UUID segmentId = videoSegmentIdDto.getVideoSegmentId();
         UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -109,7 +117,7 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(segment -> segment.getEndTimeSeconds() - segment.getStartTimeSeconds())
                 .reduce(Float::sum)
-                .orElseThrow(() -> new RuntimeException("Cannot count all segments time!"));
+                .orElse(0f);
     }
 
     private Float countAllSkippedTime(User user) {
@@ -117,7 +125,7 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(segment -> segment.getEndTimeSeconds() - segment.getStartTimeSeconds())
                 .reduce(Float::sum)
-                .orElseThrow(() -> new RuntimeException("Cannot count all skipped time!"));
+                .orElse(0f);
     }
 
     private Float countAllSavedTime(User user) {
@@ -129,6 +137,6 @@ public class UserServiceImpl implements UserService {
                     return time;
                 })
                 .reduce(Float::sum)
-                .orElseThrow(() -> new RuntimeException("Cannot count all saved time!"));
+                .orElse(0f);
     }
 }
