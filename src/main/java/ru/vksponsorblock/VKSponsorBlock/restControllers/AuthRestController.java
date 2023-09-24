@@ -35,12 +35,4 @@ public class AuthRestController {
     public JwtDto auth(@RequestBody @Valid UserCredentialsDto userCredentialsDto) {
         return authService.authorize(userCredentialsDto);
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ResponseEntity<RestErrorResponseDto> handler(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new RestErrorResponseDto(ex.getMessage()));
-    }
 }

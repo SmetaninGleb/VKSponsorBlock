@@ -11,7 +11,6 @@ import ru.vksponsorblock.VKSponsorBlock.dto.user.UserIdDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserInfoDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserUsernameDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.videoSegment.VideoSegmentIdDto;
-import ru.vksponsorblock.VKSponsorBlock.models.EntityStatus;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 import ru.vksponsorblock.VKSponsorBlock.models.VideoSegment;
 import ru.vksponsorblock.VKSponsorBlock.repositories.UserRepository;
@@ -51,7 +50,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userCredentialsDto.getUsername());
         user.setPassword(passwordEncoder.encode(userCredentialsDto.getPassword()));
         user.setRole(RoleType.USER);
-        user.setStatus(EntityStatus.ACTIVE);
 
         User registeredUser = userRepository.save(user);
 
@@ -108,7 +106,9 @@ public class UserServiceImpl implements UserService {
         Optional<VideoSegment> optSegment = segmentRepository.findVideoSegmentById(segmentId);
         VideoSegment segment = optSegment.orElseThrow(() -> new VideoSegmentNotFoundException(segmentId));
         user.getSkippedSegments().add(segment);
+        segment.getSkippedUsers().add(user);
         userRepository.save(user);
+        segmentRepository.save(segment);
     }
 
     private Float countAllSegmentsTime(User user) {

@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = String.valueOf(decodedJWT.getClaim(usernameClaim));
+        String username = decodedJWT.getClaim(usernameClaim).asString();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDetails,

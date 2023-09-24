@@ -31,22 +31,15 @@ public class VideoSegmentRestController {
     }
 
     @PostMapping("/skipSegments")
-    public ResponseEntity<HttpStatus> postSkipSegment(@RequestParam @Valid VideoSegmentAddRequestDto requestDto) {
+    public ResponseEntity<HttpStatus> postSkipSegment(@RequestBody @Valid VideoSegmentAddRequestDto requestDto) {
         videoSegmentService.addSegment(requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<HttpStatus> vote(@RequestParam @Valid VoteDto voteDto) {
+    public ResponseEntity<HttpStatus> vote(@RequestBody @Valid VoteDto voteDto) {
         videoSegmentService.vote(voteDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private ResponseEntity<RestErrorResponseDto> handler(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new RestErrorResponseDto(ex.getMessage()));
-    }
 }

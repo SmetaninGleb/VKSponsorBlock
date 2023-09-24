@@ -31,8 +31,4 @@ public class BaseEntity {
     @UpdateTimestamp
     @Column(name = "updated")
     private Date updated;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private EntityStatus status;
 }
