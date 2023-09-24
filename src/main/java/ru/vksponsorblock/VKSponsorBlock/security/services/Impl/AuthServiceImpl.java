@@ -2,6 +2,7 @@ package ru.vksponsorblock.VKSponsorBlock.security.services.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserCredentialsDto;
 import ru.vksponsorblock.VKSponsorBlock.models.User;
 import ru.vksponsorblock.VKSponsorBlock.security.dto.JwtDto;
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
         this.authValidateService = authValidateService;
     }
 
+    @Transactional
     @Override
     public JwtDto register(UserCredentialsDto userCredentialsDto) {
         authValidateService.validateRegister(userCredentialsDto);
@@ -37,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
         return dto;
     }
 
+    @Transactional
     @Override
     public JwtDto authorize(UserCredentialsDto userCredentialsDto) {
         User user = authValidateService.validateAuth(userCredentialsDto);

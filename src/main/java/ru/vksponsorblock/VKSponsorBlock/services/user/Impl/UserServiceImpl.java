@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserCredentialsDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserIdDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.user.UserInfoDto;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
         this.userValidateService = userValidateService;
     }
 
+    @Transactional
     @Override
     public User register(UserCredentialsDto userCredentialsDto) {
         User user = new User();
@@ -59,6 +61,7 @@ public class UserServiceImpl implements UserService {
         return registeredUser;
     }
 
+    @Transactional
     @Override
     public UserUsernameDto getUsernameById(UserIdDto userIdDto) {
         User user = userValidateService.validateUserById(userIdDto.getUserId());
@@ -67,6 +70,7 @@ public class UserServiceImpl implements UserService {
         return usernameDto;
     }
 
+    @Transactional
     @Override
     public UserIdDto getUserIdByUsername(UserUsernameDto usernameDto) {
         User user = userValidateService.validateUserByUsername(usernameDto.getUsername());
@@ -75,27 +79,21 @@ public class UserServiceImpl implements UserService {
         return idDto;
     }
 
+    @Transactional
     @Override
     public UserInfoDto getUserInfoById(UserIdDto userIdDto) {
         User user = userValidateService.validateUserById(userIdDto.getUserId());
-        UserInfoDto infoDto = new UserInfoDto();
-        infoDto.setUserId(user.getId());
-        infoDto.setUsername(user.getUsername());
-        infoDto.setSegmentNumber(user.getCreatedSegments().size());
-        infoDto.setAllSegmentsTime(countAllSegmentsTime(user));
-        infoDto.setSkippedTime(countAllSkippedTime(user));
-        infoDto.setSavedTime(countAllSavedTime(user));
-        return infoDto;
+        return getUserInfoByUser(user);
     }
 
+    @Transactional
     @Override
     public UserInfoDto getUserInfoByUsername(UserUsernameDto usernameDto) {
         User user = userValidateService.validateUserByUsername(usernameDto.getUsername());
-        UserIdDto userIdDto = new UserIdDto();
-        userIdDto.setUserId(user.getId());
-        return getUserInfoById(userIdDto);
+        return getUserInfoByUser(user);
     }
 
+    @Transactional
     @Override
     public void addSkippedVideoSegment(VideoSegmentIdDto videoSegmentIdDto) {
         UUID segmentId = videoSegmentIdDto.getVideoSegmentId();
@@ -138,5 +136,16 @@ public class UserServiceImpl implements UserService {
                 })
                 .reduce(Float::sum)
                 .orElse(0f);
+    }
+
+    private UserInfoDto getUserInfoByUser(User user) {
+        UserInfoDto infoDto = new UserInfoDto();
+        infoDto.setUserId(user.getId());
+        infoDto.setUsername(user.getUsername());
+        infoDto.setSegmentNumber(user.getCreatedSegments().size());
+        infoDto.setAllSegmentsTime(countAllSegmentsTime(user));
+        infoDto.setSkippedTime(countAllSkippedTime(user));
+        infoDto.setSavedTime(countAllSavedTime(user));
+        return infoDto;
     }
 }

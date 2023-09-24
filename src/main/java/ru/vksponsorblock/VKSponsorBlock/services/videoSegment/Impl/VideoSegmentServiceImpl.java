@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vksponsorblock.VKSponsorBlock.dto.videoSegment.VideoIdDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.videoSegment.VideoSegmentAddRequestDto;
 import ru.vksponsorblock.VKSponsorBlock.dto.videoSegment.VideoSegmentResponseDto;
@@ -37,6 +38,7 @@ public class VideoSegmentServiceImpl implements VideoSegmentService {
         this.videoSegmentValidateService = videoSegmentValidateService;
     }
 
+    @Transactional
     @Override
     public List<VideoSegmentResponseDto> getSegments(VideoIdDto videoIdDto) {
         List<VideoSegment> segments = videoSegmentRepository.findAllByVideoId(videoIdDto.getVideoId());
@@ -51,12 +53,14 @@ public class VideoSegmentServiceImpl implements VideoSegmentService {
         return dtoList;
     }
 
+    @Transactional
     @Override
     public void addSegment(VideoSegmentAddRequestDto addRequestDto) {
         VideoSegment segment = getSegmentByRequest(addRequestDto);
         videoSegmentRepository.save(segment);
     }
 
+    @Transactional
     @Override
     public void vote(VoteDto voteDto) {
         User user = userValidateService.validateUserById(voteDto.getUserId());
