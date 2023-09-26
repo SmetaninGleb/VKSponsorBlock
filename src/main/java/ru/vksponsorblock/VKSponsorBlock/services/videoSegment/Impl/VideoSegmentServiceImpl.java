@@ -67,10 +67,12 @@ public class VideoSegmentServiceImpl implements VideoSegmentService {
         VideoSegment segment = videoSegmentValidateService.validateSegmentById(voteDto.getVideoSegmentId());
         if (voteDto.getVoteType().equals(VoteType.LIKE)
                 && !segment.getLikedUsers().contains(user)) {
+            segment.getDislikedUsers().remove(user);
             segment.getLikedUsers().add(user);
         }
         if (voteDto.getVoteType().equals(VoteType.DISLIKE)
                 && !segment.getDislikedUsers().contains(user)) {
+            segment.getLikedUsers().remove(user);
             segment.getDislikedUsers().add(user);
         }
         if (voteDto.getVoteType().equals(VoteType.RESET)) {
