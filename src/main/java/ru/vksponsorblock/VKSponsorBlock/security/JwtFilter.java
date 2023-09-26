@@ -57,13 +57,14 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = decodedJWT.getClaim(usernameClaim).asString();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(userDetails,
-                        userDetails.getPassword(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        filterChain.doFilter(request, response);
+        try {
+            processUserAuth(decodedJWT);
+        } catch (RuntimeException ignored) {
+
+        }
+        finally {
+            filterChain.doFilter(request, response);
+        }
     }
 
     private Boolean hasAuthorizationBearer(HttpServletRequest request) {
@@ -77,5 +78,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private String getToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         return header.split(" ")[1].trim();
+    }
+
+    private void processUserAuth(DecodedJWT decodedJWT) {
+        String username = decodedJWT.getClaim(usernameClaim).asString();;
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(userDetails,
+                        userDetails.getPassword(), userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }

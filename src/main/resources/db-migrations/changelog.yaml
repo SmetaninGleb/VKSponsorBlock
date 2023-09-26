@@ -1,0 +1,164 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: smetanin_gleb
+      preConditions:
+        - onFail: MARK_RAN
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: users_pk
+                    nullable: false
+              - column:
+                  name: username
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: clob
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: smetanin_gleb
+      preConditions:
+        - onFail: MARK_RAN
+      changes:
+        - createTable:
+            tableName: video_segments
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: video_segments_pkey
+                    nullable: false
+              - column:
+                  name: created
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: video_id
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: segment_type
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time_seconds
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time_seconds
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creator_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: creator_fk
+                    reference: users(id)
+                    nullable: false
+  - changeSet:
+      id: 3
+      author: smetanin_gleb
+      preConditions:
+        - onFail: MARK_RAN
+      changes:
+        - createTable:
+            tableName: skipped_segments
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: user_fk
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: video_segment_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: video_segment_fk
+                    references: video_segments(id)
+                    nullable: false
+  - changeSet:
+      id: 4
+      author: smetanin_gleb
+      preConditions:
+        - onFail: MARK_RAN
+      changes:
+        - createTable:
+            tableName: liked_users
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: user_fk
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: video_segment_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: video_segment_fk
+                    references: video_segments(id)
+                    nullable: false
+  - changeSet:
+      id: 5
+      author: smetanin_gleb
+      preConditions:
+        - onFail: MARK_RAN
+      changes:
+        - createTable:
+            tableName: disliked_users
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: user_fk
+                    references: users(id)
+                    nullable: false
+              - column:
+                  name: video_segment_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: video_segment_fk
+                    references: video_segments(id)
+                    nullable: false

@@ -1,0 +1,1 @@
+CREATE DATABASE vk_sponsor_block;
