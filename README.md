@@ -2,9 +2,9 @@
     <br>
         <img src="logo/VKSponsorBlockLogo.png" alt="Logo"/>
     <br>
+    VK SponsorBlock Server
 </h1>
 
-<h1 align="center">VK SponsorBlock Server</h1>
 
 VK SponsorBlock is a browser extension for VK Video inspired by the [SponsorBlock](https://github.com/ajayyy/SponsorBlock/tree/master#credit)
 extension for YouTube. VK SponsorBlock allows you to save and share video segments with ads with the community, and skip them automatically.
