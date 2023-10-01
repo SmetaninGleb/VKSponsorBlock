@@ -29,7 +29,7 @@ To build and run the server yourself, you need to do the following things:
 - Clone repository
 - Change the database user and password in files [application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml) and [docker-compose.yaml](docker-compose.yaml)
 - Change the URL in the same files
-- Change the login and password for pgAdmin in the file [docker-compose.yaml](docker-compose.yaml) or after the launch and the first login[docker-compose.yaml](docker-compose.yaml)
+- Change the login and password for pgAdmin in the file [docker-compose.yaml](docker-compose.yaml) or after the launch and the first login [docker-compose.yaml](docker-compose.yaml)
 
 # License
 
